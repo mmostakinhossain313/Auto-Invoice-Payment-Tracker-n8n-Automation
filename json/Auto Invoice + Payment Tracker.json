@@ -1,0 +1,304 @@
+{
+  "name": "Auto Invoice + Payment Tracker",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1F5hwFg9T_Pn34ACwSj3_jj_9Xz931QczRDNV-I8_IlE",
+          "mode": "list",
+          "cachedResultName": "Invoice Tracker",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1F5hwFg9T_Pn34ACwSj3_jj_9Xz931QczRDNV-I8_IlE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1589449072,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1F5hwFg9T_Pn34ACwSj3_jj_9Xz931QczRDNV-I8_IlE/edit#gid=1589449072"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -448,
+        0
+      ],
+      "id": "36a893d6-bafd-4537-929f-cfc0244a3476",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "oWLZtsTXLWr3PNY2",
+          "name": "Google Sheets Trigger OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bb84832b-c04e-400d-a359-1e6744e7aea8",
+              "name": "Client Name",
+              "value": "={{ $json['Client Name'] }}",
+              "type": "string"
+            },
+            {
+              "id": "9401b816-0f16-4103-939a-b27704405e45",
+              "name": "Email Address",
+              "value": "={{ $json['Email Address'] }}",
+              "type": "string"
+            },
+            {
+              "id": "7d195b70-ab9d-4e01-8ca7-6028c20072fe",
+              "name": "Service/Product",
+              "value": "={{ $json['Service/Product'] }}",
+              "type": "string"
+            },
+            {
+              "id": "69e43b5d-7917-4f61-b5fb-289f8f34354c",
+              "name": "Amount",
+              "value": "={{ $json.Amount }}",
+              "type": "number"
+            },
+            {
+              "id": "ac501bec-c51f-4fb3-a7a7-e1c97a5473d9",
+              "name": "Invoice No",
+              "value": "=INV-{{ $json['Email Address'].split('@')[0] }}-{{ $now.toFormat('yyyyMMddHHmmss') }}",
+              "type": "string"
+            },
+            {
+              "id": "a3c6afc5-b3e1-4064-964b-c19510c3c8ca",
+              "name": "Date",
+              "value": "={{ $now.toFormat('yyyy-MM-dd') }}",
+              "type": "string"
+            },
+            {
+              "id": "6a266a44-e205-4247-8c75-525fe6f3ca05",
+              "name": "status",
+              "value": "Pending Payment",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -288,
+        0
+      ],
+      "id": "5ca9b4e1-1471-488e-b987-d10647295059",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1F5hwFg9T_Pn34ACwSj3_jj_9Xz931QczRDNV-I8_IlE",
+          "mode": "list",
+          "cachedResultName": "Invoice Tracker",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1F5hwFg9T_Pn34ACwSj3_jj_9Xz931QczRDNV-I8_IlE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1589449072,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1F5hwFg9T_Pn34ACwSj3_jj_9Xz931QczRDNV-I8_IlE/edit#gid=1589449072"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Invoice No": "={{ $json['Invoice No'] }}",
+            "Date": "={{ $json.Date }}",
+            "Status": "={{ $json.status }}",
+            "Email Address": "={{ $json['Email Address'] }}"
+          },
+          "matchingColumns": [
+            "Email Address"
+          ],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Client Name",
+              "displayName": "Client Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Address",
+              "displayName": "Email Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Service/Product",
+              "displayName": "Service/Product",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Amount",
+              "displayName": "Amount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Invoice No",
+              "displayName": "Invoice No",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -112,
+        0
+      ],
+      "id": "e2100e08-e761-4f5c-b854-ca2455ecc453",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Vvyaf4MtdtLlFXW1",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "mostakinhossain89@gmail.com",
+        "subject": "=New Order Received: {{ $('Edit Fields').item.json['Invoice No'] }}",
+        "message": "=You have a new order!\n\nClient: {{ $('Google Sheets Trigger').item.json['Client Name'] }}\nEmail: {{ $('Google Sheets Trigger').item.json['Email Address'] }}\nService: {{ $('Google Sheets Trigger').item.json['Service/Product'] }}\nAmount: ${{ $('Google Sheets Trigger').item.json.Amount }}\nInvoice No: {{ $('Google Sheets Trigger').item.json['Invoice No'] }}\nDate: {{ $('Google Sheets Trigger').item.json.Date }}\nStatus: {{ $('Google Sheets Trigger').item.json.Status }}\n\nPlease follow up with the client soon.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        96,
+        0
+      ],
+      "id": "5c5e18e1-df2f-449b-8f81-d940a3033351",
+      "name": "Owner Notification Email",
+      "webhookId": "f46c5c01-ffee-4b31-98a3-7619321b3f9b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "6stsBcdkO41pX8Kq",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Owner Notification Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Owner Notification Email": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "9d5d1698-336d-4e50-a7c4-11b77a91979e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f2f23a593b5262fad10e7ebf366e5500ddfd99f99fc69ff6bdb831511c19c666"
+  },
+  "id": "z4umSsVjE4xYZgYO",
+  "tags": []
+}
